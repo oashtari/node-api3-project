@@ -3,8 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const db = require('./userDb');
-
-
+const postDb = require('../posts/postDb');
 // get,
 // getById,
 // getUserPosts,
@@ -24,8 +23,17 @@ router.post('/', validateUser, (req, res) => {
     })
 });
 
-router.post('/:id/posts', (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
   // do your magic!
+  const id = req.params.id;
+
+  postDb.insert({ user_id: id, text: req.body.text })
+    .then(post => {
+      res.status(201).json(post)
+    })
+    .catch(error => {
+      res.status(500).json({ error: "was not able to add post to postDb" })
+    })
 });
 
 router.get('/', (req, res) => {
