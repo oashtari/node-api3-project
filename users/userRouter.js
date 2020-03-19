@@ -38,10 +38,11 @@ router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
 
 router.get('/', (req, res) => {
   // do your magic!
+  const motd = process.env.MOTD || "where is the MOTD?";
   db.get()
     .then(users => {
       if (users) {
-        res.status(200).json(users)
+        res.status(200).json({ motd, users })
       } else {
         res.status(404).json({ message: "No users for you" })
       }
